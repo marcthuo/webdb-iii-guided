@@ -1,16 +1,24 @@
 module.exports = {
   development: {
     client: 'sqlite3',
-    useNullAsDefault: true, // needed for sqlite
-    // create the data folder manually
+    useNullAsDefault: true,
     connection: {
-      filename: './data/rolex.db3', // the name for the database file to use, adjust as needed
+      filename: './data/lambda.db3', // the folder will be created when we run the migrations
+    },
+    pool: {
+      // runs after a connection is made to the sqlite engine
+      afterCreate: (conn, done) => {
+        // by default SQLite will not enforce Foreign Keys
+        conn.run('PRAGMA foreign_keys = ON', done); // turn on FK enforcement
+      },
     },
     migrations: {
-      directory: './data/migrations', // the migrations folder is added to the root by default, this moves it to /data
+      // we can change the location of the migrations
+      directory: './data/migrations',
     },
     seeds: {
-      directory: './data/seeds', // the seeds folder is added to the root by default, this moves it to /data
+      // we can change the location of the seeds
+      directory: './data/seeds',
     },
   },
 };
